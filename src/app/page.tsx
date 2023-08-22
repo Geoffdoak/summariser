@@ -1,11 +1,9 @@
 import { LoginButton, LogoutButton } from "@/auth"
-import { Button } from "@/button"
+import { Content } from "@/button"
 import { prisma } from "@/lib/prisma"
 import { getServerSession } from "next-auth"
-import { Signika_Negative } from "next/font/google"
 import { authOptions } from "./api/auth/[...nextauth]/route"
 
-import { addTest } from "@/actions"
 
 export default async function Home() {
   const user = await prisma.user.findFirst({
@@ -22,9 +20,13 @@ export default async function Home() {
       <LogoutButton></LogoutButton>
       {user?.name}
       {JSON.stringify(session)}
-      <Button
-        callback={addTest}
-       />
+      <Content />
     </main>
   )
 }
+
+// export default function Home() {
+//   return (
+//     <div>Hello</div>
+//   )
+// }

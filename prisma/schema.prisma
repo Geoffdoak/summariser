@@ -11,13 +11,29 @@ datasource db {
 }
 
 model User {
-  id       Int     @id @default(autoincrement())
-  email    String  @unique
-  password String
-  name     String?
+  id             Int             @id @default(autoincrement())
+  email          String          @unique
+  password       String
+  name           String?
+  questionnaires Questionnaire[]
 }
 
 model Test {
-  id Int @id @default(autoincrement())
+  id      Int    @id @default(autoincrement())
   content String
+}
+
+model Questionnaire {
+  id        String     @id @default(uuid())
+  title     String
+  userId    Int
+  user      User       @relation(fields: [userId], references: [id])
+  questions Question[]
+}
+
+model Question {
+  id              String        @id @default(uuid())
+  questionnaireId String
+  questionnaire   Questionnaire @relation(fields: [questionnaireId], references: [id])
+  content         String
 }
