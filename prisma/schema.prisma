@@ -11,29 +11,44 @@ datasource db {
 }
 
 model User {
-  id             Int             @id @default(autoincrement())
+  id             String          @id @default(uuid())
   email          String          @unique
   password       String
   name           String?
   questionnaires Questionnaire[]
-}
-
-model Test {
-  id      Int    @id @default(autoincrement())
-  content String
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
 }
 
 model Questionnaire {
-  id        String     @id @default(uuid())
-  title     String
-  userId    Int
-  user      User       @relation(fields: [userId], references: [id])
-  questions Question[]
+  id               String            @id @default(uuid())
+  title            String
+  userId           String
+  user             User              @relation(fields: [userId], references: [id])
+  questions        Question[]
+  summarised       Boolean           @default(false)
+  groupedQuestions GroupedQuestion[]
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
 }
 
 model Question {
-  id              String        @id @default(uuid())
-  questionnaireId String
-  questionnaire   Questionnaire @relation(fields: [questionnaireId], references: [id])
-  content         String
+  id                String          @id @default(uuid())
+  questionnaireId   String
+  questionnaire     Questionnaire   @relation(fields: [questionnaireId], references: [id])
+  groupedQuestionId String
+  groupedQuestion   GroupedQuestion? @relation(fields: [groupedQuestionId], references: [id])
+  content           String
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+}
+
+model GroupedQuestion {
+  id               String        @id @default(uuid())
+  questionnaireId  String
+  questionnaire    Questionnaire @relation(fields: [questionnaireId], references: [id])
+  content          String
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+  exampleQuestions Question[]
 }
