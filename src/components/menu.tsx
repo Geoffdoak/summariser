@@ -1,6 +1,6 @@
 'use client'
 
-import { LoginButton, LogoutButton } from "@/components/auth"
+import { LoginButton, LogoutButton, SignUpButton } from "@/components/auth"
 import { Button, Navbar, NavbarBrand, NavbarContent, NavbarItem } from "@nextui-org/react"
 import {AiFillHome} from 'react-icons/ai'
 
@@ -18,9 +18,7 @@ export default function Menu(props: MenuProps) {
                 <NavbarItem>
                     {!isSignedIn && (
                         <>
-                            <Button>
-                                Sign Up
-                            </Button>
+                            <SignUpButton/>
                             <LoginButton/>
                         </>
                     )}
