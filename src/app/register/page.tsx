@@ -3,14 +3,16 @@
 import { Button, Card, CardBody, CardHeader, Input } from '@nextui-org/react'
 import { signIn } from 'next-auth/react'
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 
 export default function Register() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [name, setName] = useState('')
   const [error, setError] = useState<string | null>(null)
+  const router = useRouter()
 
-  const onSubmit = async () => {
+  const onSubmit = async function() {
     try {
       const res = await fetch('/api/register', {
         method: 'POST',
@@ -24,7 +26,7 @@ export default function Register() {
         }
       })
       if (res.ok) {
-        signIn()
+        router.push('/login')
       } else {
         setError((await res.json()).error)
       }
