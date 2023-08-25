@@ -83,6 +83,27 @@ export async function createQuestionnaire(title: string) {
     })
 }
 
+export async function removeQuestionnaire(questionnaireId: string) {
+    'user serve'
+
+    const session = await getServerSession(authOptions) as SessionWithId
+
+    if (!session || !session.user) return null
+
+    await prisma.question.deleteMany({
+        where: {
+            questionnaireId: questionnaireId
+        }
+    })
+    
+    await prisma.questionnaire.delete({
+        where: {
+            id: questionnaireId,
+            userId: parseInt(session.id)
+        }
+    })
+}
+
 export async function createQuestion(questionnaireId: string, content: string) {
     'user server'
 
@@ -96,4 +117,20 @@ export async function createQuestion(questionnaireId: string, content: string) {
             }
         }
     })
+}
+
+export async function getQuestions(questionnaireId: string) {
+    'user server'
+
+    const session = await getServerSession(authOptions) as SessionWithId
+
+    if (!session || !session.user) return null
+
+    const questions = await prisma.question.findMany({
+        where: {
+            questionnaireId: questionnaireId
+        }
+    })
+
+    return questions
 }

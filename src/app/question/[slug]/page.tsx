@@ -1,27 +1,39 @@
 'use client'
 
 import { createQuestion } from "@/actions"
+import { AddNew } from "@/components/addNew"
+import { Button, Card, CardBody } from "@nextui-org/react"
 import { useState } from "react"
 
 export default function Page({ params }: { params: { slug: string } }) {
-  const [content, setContent ] = useState('')
+  // const [content, setContent ] = useState('')
+  const [hasSubmitted, setHasSubmitted] = useState(false)
 
-  const handleClick = async function() {
+  const handleClick = async function(content: string) {
       await createQuestion(params.slug, content)
+      setHasSubmitted(true)
   }
 
   return (
-    <div>
-      <form action={handleClick}>
-        <input
-          type="text"
-          required
-          value={content}
-          onChange={(e) => setContent(e.target.value)}
-          id='title'
+    <>
+      {!hasSubmitted && (
+        <AddNew
+          callback={handleClick}
+          placeHolder="Ask a question"
         />
-        <button type="submit">Add question</button>
-      </form>
-    </div>
+      )}
+      {hasSubmitted && (
+        <Card>
+          <CardBody>
+            <div className="flex justify-between items-center text-large">
+              <div>
+                Success!
+              </div>
+            <Button onPress={() => setHasSubmitted(false)}>Add another question</Button>
+            </div>
+          </CardBody>
+        </Card>
+      )}
+    </>
   )
 }

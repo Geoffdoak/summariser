@@ -1,4 +1,4 @@
-import { LoginButton, LogoutButton } from "@/auth"
+import { LoginButton, LogoutButton } from "@/components/auth"
 import { Content } from "@/button"
 import { prisma } from "@/lib/prisma"
 import { getServerSession } from "next-auth"
@@ -20,7 +20,6 @@ export default async function Home() {
       <LogoutButton></LogoutButton>
       {user?.name}
       {JSON.stringify(session)}
-      <Content />
     </main>
   )
 }
