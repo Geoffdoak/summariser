@@ -14,7 +14,7 @@ export default function Question(props: QuestionProps) {
         <Card className="mb-5">
             <CardBody>
                 <div className="flex">
-                    <div className="mr-3">
+                    <div className="mr-1">
                         {(index + 1) + ':'}
                     </div>
                     <div>

@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react"
 import { getQuestions } from "@/actions"
 import Question from "@/components/question";
+import { Button } from "@nextui-org/button";
+import { AiOutlineReload } from "react-icons/ai";
 
 type QuestionsType = {
     id: string;
@@ -28,6 +30,15 @@ export default function Page({ params }: { params: { slug: string } }) {
             {!content || (content.length < 1) && (
                 <div>No questions yet</div>
             )}
+            <div className="mb-5 flex justify-end">
+                <Button
+                    onPress={updateContent}
+                    color={'success'}
+                    endContent={<AiOutlineReload/>}
+                >
+                    Refresh
+                </Button>
+            </div>
             {content && content.map((q, index) => {
                 return (
                     <Question
