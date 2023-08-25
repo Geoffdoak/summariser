@@ -12,33 +12,6 @@ type SessionWithId = {
     id: string
 }
 
-export async function addTest() {
-    'use server'
-    
-    const user = await prisma.user.findFirst({
-        where: {
-          email: 'test@test.com'
-        }
-      })
-
-    const session = await getServerSession(authOptions)
-
-    const data = session?.user ? session?.user.name || 'no name' : 'no name';
-    
-    await prisma.test.create({
-      data: {
-        content: data
-      }
-    })
-}
-
-export async function getTests() {
-    'use server'
-
-    const tests = await prisma.test.findMany()
-    return JSON.stringify(tests)
-}
-
 export async function getQuestionnaires() {
     'user server'
 
@@ -48,10 +21,13 @@ export async function getQuestionnaires() {
 
     const questionnaires = await prisma.user.findUnique({
         where: {
-            id: parseInt(session.id)
+            id: session.id
         },
         select: {
             questionnaires: {
+                orderBy:{
+                    updatedAt: 'desc'
+                },
                 select: {
                     title: true,
                     id: true,
@@ -76,7 +52,7 @@ export async function createQuestionnaire(title: string) {
             title: title,
             user: {
                 connect: {
-                   id: parseInt(session.id)
+                   id: session.id
                 }
             }
         }
@@ -99,7 +75,7 @@ export async function removeQuestionnaire(questionnaireId: string) {
     await prisma.questionnaire.delete({
         where: {
             id: questionnaireId,
-            userId: parseInt(session.id)
+            userId: session.id
         }
     })
 }

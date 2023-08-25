@@ -4,6 +4,7 @@ import { useEffect, useState } from "react"
 import { getQuestionnaires, createQuestionnaire, removeQuestionnaire } from "@/actions"
 import { Questionnaire } from "@/components/questionnaire"
 import { AddNew } from "@/components/addNew";
+import { AnimatePresence } from "framer-motion";
 
 
 type returnedTests = {
@@ -48,17 +49,19 @@ export default function Content() {
                 callback={handleAdd}
                 placeHolder={"Add a new questionnaire"}
             />
-            {tests && tests.questionnaires.map(test => {
-                return (
-                    <Questionnaire
-                        key={test.id}
-                        title={test.title}
-                        id={test.id}
-                        questions={test.questions}
-                        removeHandler={handleRemove}
-                    />
-                )
-            })}
+            <AnimatePresence>
+                {tests && tests.questionnaires.map(test => {
+                    return (
+                        <Questionnaire
+                            key={test.id}
+                            title={test.title}
+                            id={test.id}
+                            questions={test.questions}
+                            removeHandler={handleRemove}
+                        />
+                    )
+                })}
+            </AnimatePresence>
         </div>
     )
 }
