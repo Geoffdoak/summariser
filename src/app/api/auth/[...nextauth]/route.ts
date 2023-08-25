@@ -2,7 +2,6 @@ import { prisma } from "@/lib/prisma"
 import { compare } from "bcrypt"
 import NextAuth, { type NextAuthOptions } from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
-import { userAgent } from "next/server"
 
 export const authOptions: NextAuthOptions = {
     session: {

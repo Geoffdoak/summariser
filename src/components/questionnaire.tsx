@@ -2,10 +2,7 @@
 
 import { Button, Card, CardBody, CardHeader } from "@nextui-org/react"
 import NextLink from "next/link"
-import { useEffect, useState } from "react"
-// import { addTest, getTests, getQuestionnaires, createQuestionnaire } from "@/actions"
-import { removeQuestionnaire } from "@/actions"
-import {AiOutlineDelete} from 'react-icons/ai'
+import DeleteButton from "./deleteButton"
 
 type QuestionnaireProps = {
     title: string,
@@ -22,22 +19,14 @@ export function Questionnaire(props: QuestionnaireProps) {
     const { title, id, questions, removeHandler } = props
 
     return (
-        <Card
-            className="mb-5"
-        >
+        <Card className="mb-5">
             <CardHeader className="px-5 pb-0">
-                <h3
-                    className="text-large"
-                >
+                <h3 className="text-large">
                     {title}
                 </h3>
             </CardHeader>
-            <CardBody
-                className="flex"
-            >
-                <div
-                    className="flex justify-stretch"
-                >
+            <CardBody className="flex">
+                <div className="flex justify-stretch">
                     <div className="flex justify-start">
                         <Button
                             className="mr-5"
@@ -54,22 +43,12 @@ export function Questionnaire(props: QuestionnaireProps) {
                         </Button>
                     </div>
                     <div className="flex justify-end grow">
-                        <Button
-                            className="justify-self-end"
-                            onPress={() => removeHandler(id)}
-                            isIconOnly
-                            color="danger"
-                        >
-                            <AiOutlineDelete />
-                        </Button>
+                        <DeleteButton
+                            deleteHandler={() => removeHandler(id)}
+                        />
                     </div>
                 </div>
             </CardBody>
-            {/* <ul>
-                {questions.map(q => {
-                    return <li>{q.content}</li>
-                })}
-            </ul>             */}
         </Card>
     )
 }

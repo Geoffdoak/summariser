@@ -1,12 +1,9 @@
 'use client'
 
 import { useEffect, useState } from "react"
-import { addTest, getTests, getQuestionnaires, createQuestionnaire } from "@/actions"
+import { getQuestionnaires, createQuestionnaire, removeQuestionnaire } from "@/actions"
 import { Questionnaire } from "@/components/questionnaire"
-import { Button, Card, CardBody, Input } from "@nextui-org/react";
-import { AiOutlinePlus } from 'react-icons/ai'
 import { AddNew } from "@/components/addNew";
-import { removeQuestionnaire } from "@/actions"
 
 
 type returnedTests = {
@@ -24,13 +21,13 @@ type returnedTests = {
 export default function Content() {
     const [tests, setTests] = useState(null as returnedTests)
 
-    const handleClick = async function (content: string) {
+    const handleAdd = async function (content: string) {
         await createQuestionnaire(content)
         const returnedTests = await getQuestionnaires()
         setTests(returnedTests)
     }
 
-    const removeHandler = async function(questionnaireId: string) {
+    const handleRemove = async function(questionnaireId: string) {
         await removeQuestionnaire(questionnaireId)
         const returnedTests = await getQuestionnaires()
         setTests(returnedTests)
@@ -48,7 +45,7 @@ export default function Content() {
     return (
         <div>
             <AddNew
-                callback={handleClick}
+                callback={handleAdd}
                 placeHolder={"Add a new questionnaire"}
             />
             {tests && tests.questionnaires.map(test => {
@@ -58,7 +55,7 @@ export default function Content() {
                         title={test.title}
                         id={test.id}
                         questions={test.questions}
-                        removeHandler={removeHandler}
+                        removeHandler={handleRemove}
                     />
                 )
             })}

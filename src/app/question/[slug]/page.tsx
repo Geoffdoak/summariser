@@ -6,7 +6,6 @@ import { Button, Card, CardBody } from "@nextui-org/react"
 import { useState } from "react"
 
 export default function Page({ params }: { params: { slug: string } }) {
-  // const [content, setContent ] = useState('')
   const [hasSubmitted, setHasSubmitted] = useState(false)
 
   const handleClick = async function(content: string) {

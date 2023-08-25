@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { getQuestions } from "@/actions"
-import { Card, CardBody, CardHeader } from "@nextui-org/react";
+import Question from "@/components/question";
 
 type QuestionsType = {
     id: string;
@@ -25,20 +25,16 @@ export default function Page({ params }: { params: { slug: string } }) {
     
     return (
         <div>
+            {!content || (content.length < 1) && (
+                <div>No questions yet</div>
+            )}
             {content && content.map((q, index) => {
                 return (
-                    <Card className="mb-5" key={q.id}>
-                        <CardBody>
-                            <div className="flex">
-                                <div className="mr-3">
-                                    {(index + 1) + ':'}
-                                </div>
-                                <div>
-                                    {q.content}
-                                </div>
-                            </div>
-                        </CardBody>
-                    </Card>
+                    <Question
+                        content={q.content}
+                        index={index}
+                        key={q.id}
+                    />
                 )
             })}
         </div>
