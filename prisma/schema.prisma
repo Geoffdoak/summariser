@@ -33,14 +33,14 @@ model Questionnaire {
 }
 
 model Question {
-  id                String          @id @default(uuid())
+  id                String           @id @default(uuid())
   questionnaireId   String
-  questionnaire     Questionnaire   @relation(fields: [questionnaireId], references: [id])
-  groupedQuestionId String
-  groupedQuestion   GroupedQuestion? @relation(fields: [groupedQuestionId], references: [id])
+  questionnaire     Questionnaire    @relation(fields: [questionnaireId], references: [id])
+  groupedQuestionId String?
+  groupedQuestion   GroupedQuestion? @relation("GroupedQuestion", fields: [groupedQuestionId], references: [id])
   content           String
-  createdAt         DateTime        @default(now())
-  updatedAt         DateTime        @updatedAt
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
 }
 
 model GroupedQuestion {
@@ -50,5 +50,5 @@ model GroupedQuestion {
   content          String
   createdAt        DateTime      @default(now())
   updatedAt        DateTime      @updatedAt
-  exampleQuestions Question[]
+  exampleQuestions Question[]    @relation("GroupedQuestion")
 }
