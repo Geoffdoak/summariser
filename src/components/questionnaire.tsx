@@ -4,6 +4,7 @@ import { Button, Card, CardBody, CardHeader } from "@nextui-org/react"
 import { LayoutGroup, motion } from "framer-motion"
 import NextLink from "next/link"
 import DeleteButton from "./deleteButton"
+import { AiOutlinePlus } from "react-icons/ai"
 
 type QuestionnaireProps = {
     title: string,
@@ -31,17 +32,19 @@ export function Questionnaire(props: QuestionnaireProps) {
                     <div className="flex justify-stretch">
                         <div className="flex justify-start">
                             <Button
-                                className="mr-5"
+                                className="mr-3"
                                 href={'./question/' + id}
                                 as={NextLink}
+                                isIconOnly
+                                color="success"
                             >
-                                Add Question
+                                <AiOutlinePlus />
                             </Button>
                             <Button
                                 href={'/summary/' + id}
                                 as={NextLink}
                             >
-                                View Summary
+                                Summary
                             </Button>
                         </div>
                         <div className="flex justify-end grow">

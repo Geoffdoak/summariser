@@ -12,6 +12,10 @@ export function LogoutButton() {
     return <Button onPress={() => signOut()}>Sign Out</Button>
 }
 
-export function SignUpButton() {
-    return <Button href={'/register'} as={NextLink}>Sign Up</Button>
+type SignUpButtonProps = {
+    className?: string
+}
+
+export function SignUpButton(props: SignUpButtonProps) {
+    return <Button href={'/register'} className={props.className} as={NextLink}>Sign Up</Button>
 }

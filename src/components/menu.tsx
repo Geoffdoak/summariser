@@ -18,7 +18,7 @@ export default function Menu(props: MenuProps) {
                 <NavbarItem>
                     {!isSignedIn && (
                         <>
-                            <SignUpButton/>
+                            <SignUpButton className="mr-3"/>
                             <LoginButton/>
                         </>
                     )}

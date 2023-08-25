@@ -26,7 +26,7 @@ export default async function RootLayout({
         <body className={inter.className}>
           <Providers>
             <Menu isSignedIn={isSignedIn}></Menu>
-              <div className="container mx-auto column-12 px-5 pt-5">
+              <div className="container mx-auto column-12 px-5 pt-5 max-w-5xl">
                 {children}
               </div>
           </Providers>
