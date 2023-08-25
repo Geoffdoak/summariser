@@ -10,9 +10,7 @@ export default function Register() {
   const [name, setName] = useState('')
   const [error, setError] = useState<string | null>(null)
 
-  const onSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-
+  const onSubmit = async () => {
     try {
       const res = await fetch('/api/register', {
         method: 'POST',
@@ -72,7 +70,7 @@ export default function Register() {
           </div>
           {error && <div>{error}</div>}
           <div className="w-full">
-            <Button className="w-full">
+            <Button className="w-full" onPress={onSubmit}>
               Register
             </Button>
           </div>
