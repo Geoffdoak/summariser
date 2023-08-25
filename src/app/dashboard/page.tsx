@@ -5,6 +5,7 @@ import { getQuestionnaires, createQuestionnaire, removeQuestionnaire } from "@/a
 import { Questionnaire } from "@/components/questionnaire"
 import { AddNew } from "@/components/addNew";
 import { AnimatePresence } from "framer-motion";
+import { AnimationWrapper } from "@/components/animationWrapper";
 
 
 type returnedTests = {
@@ -44,24 +45,26 @@ export default function Content() {
     }, [])
 
     return (
-        <div>
-            <AddNew
-                callback={handleAdd}
-                placeHolder={"Add a new questionnaire"}
-            />
-            <AnimatePresence>
-                {tests && tests.questionnaires.map(test => {
-                    return (
-                        <Questionnaire
-                            key={test.id}
-                            title={test.title}
-                            id={test.id}
-                            questions={test.questions}
-                            removeHandler={handleRemove}
-                        />
-                    )
-                })}
-            </AnimatePresence>
-        </div>
+        <AnimationWrapper>
+            <div>
+                <AddNew
+                    callback={handleAdd}
+                    placeHolder={"Add a new questionnaire"}
+                />
+                <AnimatePresence>
+                    {tests && tests.questionnaires.map(test => {
+                        return (
+                            <Questionnaire
+                                key={test.id}
+                                title={test.title}
+                                id={test.id}
+                                questions={test.questions}
+                                removeHandler={handleRemove}
+                            />
+                        )
+                    })}
+                </AnimatePresence>
+            </div>
+        </AnimationWrapper>
     )
 }

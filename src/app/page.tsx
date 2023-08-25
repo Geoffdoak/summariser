@@ -1,3 +1,4 @@
+import { AnimationWrapper } from "@/components/animationWrapper"
 import { LoginButton, LogoutButton } from "@/components/auth"
 import { prisma } from "@/lib/prisma"
 import { getServerSession } from "next-auth"
@@ -14,11 +15,13 @@ export default async function Home() {
   const session = await getServerSession(authOptions)
 
   return (
-    <main>
-      <LoginButton></LoginButton>
-      <LogoutButton></LogoutButton>
-      {user?.name}
-      {JSON.stringify(session)}
-    </main>
+    <AnimationWrapper>
+      <main>
+        <LoginButton></LoginButton>
+        <LogoutButton></LogoutButton>
+        {user?.name}
+        {JSON.stringify(session)}
+      </main>
+    </AnimationWrapper>
   )
 }

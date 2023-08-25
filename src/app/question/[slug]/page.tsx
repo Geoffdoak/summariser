@@ -2,6 +2,7 @@
 
 import { createQuestion } from "@/actions"
 import { AddNew } from "@/components/addNew"
+import { AnimationWrapper } from "@/components/animationWrapper"
 import { Button, Card, CardBody } from "@nextui-org/react"
 import { useState } from "react"
 
@@ -14,7 +15,7 @@ export default function Page({ params }: { params: { slug: string } }) {
   }
 
   return (
-    <>
+    <AnimationWrapper>
       {!hasSubmitted && (
         <AddNew
           callback={handleClick}
@@ -33,6 +34,6 @@ export default function Page({ params }: { params: { slug: string } }) {
           </CardBody>
         </Card>
       )}
-    </>
+    </AnimationWrapper>
   )
 }
