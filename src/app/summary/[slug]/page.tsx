@@ -7,6 +7,8 @@ import { Button } from "@nextui-org/button";
 import { AiOutlineReload } from "react-icons/ai";
 import { AnimationWrapper } from "@/components/animationWrapper";
 import { getSummary, GroupedQuestionType } from "@/openai";
+import { Accordion, AccordionItem, Spinner } from "@nextui-org/react";
+
 
 type QuestionsType = {
     id: string;
@@ -16,14 +18,15 @@ type QuestionsType = {
 
 export default function Page({ params }: { params: { slug: string } }) {
     const { slug } = params
-    const [content, setContent] = useState(null as GroupedQuestionType[] | null)
-    const [secondContent, setSecondContent] = useState(null as any)
+    const [content, setContent] = useState([] as GroupedQuestionType[])
+    const [isLoading, setisLoading] = useState(false)
 
     const updateContent = async function () {
-        // const secondContent = await getQuestionnaire(slug)
-        // if (secondContent) setSecondContent(secondContent)
+        console.log('update content')
+        setisLoading(true)
         const updatedContent = await getSummary(slug)
         if (updatedContent.body) setContent(updatedContent.body)
+        setisLoading(false)
     }
 
     useEffect(() => {
@@ -32,47 +35,41 @@ export default function Page({ params }: { params: { slug: string } }) {
 
     return (
         <AnimationWrapper>
-            <div>
-                {/* {!content || (content.length < 1) && (
-                    <div>No questions yet</div>
-                )}
-                <div className="mb-5 flex justify-end">
-                    <Button
-                        onPress={updateContent}
-                        color={'success'}
-                        endContent={<AiOutlineReload/>}
-                    >
-                        Refresh
-                    </Button>
+            <div className="mb-5 flex justify-end">
+                <Button
+                    onPress={updateContent}
+                    color={'success'}
+                    endContent={<AiOutlineReload />}
+                >
+                    Refresh
+                </Button>
+            </div>
+            {isLoading && (
+                <div className="flex justify-center" >
+                    <Spinner/>
                 </div>
-                {content && content.map((q, index) => {
-                    return (
-                        <Question
-                            content={q.content}
-                            index={index}
-                            key={q.id}
-                        />
-                    )
-                })} */}
-                {secondContent && JSON.stringify(secondContent)}
-                {content && content.map((response, index) => {
-                    return (
-                        <li key={index}>
-                            <h2>
-                                {response.questionContent}
-                            </h2>
-                            <div>Ask count: {response.askedQuestions.length + 1}</div>
-                            <ul className="ml-5">
-                                {response.askedQuestions.map((q, index) => {
+            )}
+            {!isLoading && (
+                <Accordion variant="splitted">
+                    {/* {secondContent && JSON.stringify(secondContent)} */}
+                    {content && content.map((response, index) => {
+                        return (
+                            <AccordionItem
+                                key={index}
+                                title={response.questionContent}
+                                subtitle={'Asked: ' + (response.askedQuestions.length + 1)}
+                                isCompact={true}
+                            >
+                                {response.askedQuestions.map((question, index) => {
                                     return (
-                                        <li key={index}>{q.content}</li>
+                                        <div key={index}>{question.content}</div>
                                     )
                                 })}
-                            </ul>
-                        </li>
-                    )
-                })}
-            </div>
+                            </AccordionItem>
+                        )
+                    })}
+                </Accordion>
+            )}
         </AnimationWrapper>
     )
 }
