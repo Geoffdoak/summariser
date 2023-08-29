@@ -101,6 +101,12 @@ export async function removeQuestionnaire(questionnaireId: string) {
         const session = await getServerSession(authOptions) as SessionWithId
         if (!session || !session.user) throw Error('Not logged in')
 
+        await prisma.groupedQuestion.deleteMany({
+            where: {
+                questionnaireId: questionnaireId
+            }
+        })
+        
         await prisma.question.deleteMany({
             where: {
                 questionnaireId: questionnaireId
@@ -172,7 +178,9 @@ export async function getQuestions(questionnaireId: string) {
     }
 }
 
-export async function setGroupedQuestions(questionnnaireId: string, groupedQuestions: GroupedQuestionType[]) {
+export async function setGroupedQuestions(
+    questionnnaireId: string, groupedQuestions: GroupedQuestionType[]
+) {
     'use server'
 
     try {
