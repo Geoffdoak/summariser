@@ -16,12 +16,7 @@ async function main() {
             password: password
         }
     })
-    const test = await prisma.test.create({
-        data: {
-            content: 'test content'
-        }
-    })
-    console.log({ user, test })
+    console.log({ user })
 }
 main()
     .then(() => prisma.$disconnect())
