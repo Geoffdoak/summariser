@@ -7,32 +7,58 @@ import { AddNew } from "@/components/addNew";
 import { AnimatePresence } from "framer-motion";
 import { AnimationWrapper } from "@/components/animationWrapper";
 
-
-type returnedTests = {
-    questionnaires: {
-        id: string;
-        title: string;
-        questions: {
-            id: string;
-            questionnaireId: string;
-            content: string;
-        }[];
-    }[]
-} | null
-
 export default function Content() {
-    const [tests, setTests] = useState(null as returnedTests)
+    const [questionnaires, setTests] = useState(null as Awaited<ReturnType<typeof getQuestionnaires>> | null)
+    const [error, setError] = useState(null as null | string)
 
+    const handleError = function(error: string) {
+        // TODO: Add toast notification
+        console.log(error)
+        setError(error)
+    }
+    
     const handleAdd = async function (content: string) {
-        await createQuestionnaire(content)
-        const returnedTests = await getQuestionnaires()
-        setTests(returnedTests)
+        try {
+            const create = await createQuestionnaire(content)
+
+            if (create.error) {
+                handleError(JSON.stringify(create.error))
+                return
+            }
+            
+            const returnedTests = await getQuestionnaires()
+
+            if (returnedTests.error) {
+                handleError(returnedTests.error)
+                return
+            }
+
+            setTests(returnedTests)
+        } catch(error) {
+            handleError(JSON.stringify(error))
+        }
     }
 
-    const handleRemove = async function(questionnaireId: string) {
-        await removeQuestionnaire(questionnaireId)
-        const returnedTests = await getQuestionnaires()
-        setTests(returnedTests)
+    const handleRemove = async function (questionnaireId: string) {
+        try {
+            const remove = await removeQuestionnaire(questionnaireId)
+
+            if (remove.error) {
+                handleError(JSON.stringify(remove.error))
+                return
+            }
+            
+            const returnedTests = await getQuestionnaires()
+
+            if (returnedTests.error) {
+                handleError(returnedTests.error)
+                return
+            }
+
+            setTests(returnedTests)
+        } catch(error) {
+            handleError(JSON.stringify(error))
+        }
     }
 
     const initialTests = async function () {
@@ -52,7 +78,8 @@ export default function Content() {
                     placeHolder={"Add a new questionnaire"}
                 />
                 <AnimatePresence>
-                    {tests && tests.questionnaires.map(test => {
+                    {error}
+                    {questionnaires?.body && questionnaires.body.map(test => {
                         return (
                             <Questionnaire
                                 key={test.id}

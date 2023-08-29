@@ -9,8 +9,9 @@ export default function SignIn() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
-  const onSubmit = function () {
-    signIn('credentials', { email: email, password: password, callbackUrl: '/dashboard' })
+  const onSubmit = async function () {
+    const url = window.origin + '/dashboard'
+    signIn('credentials', { email: email, password: password, callbackUrl: url })
   }
 
   return (

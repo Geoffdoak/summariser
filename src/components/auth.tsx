@@ -6,7 +6,7 @@ import NextLink from "next/link"
 
 
 export function LoginButton() {
-    return <Button onPress={() => signIn()}>Sign In</Button>
+    return <Button href={'/login'} as={NextLink}>Sign In</Button>
 }
 export function LogoutButton() {
     return <Button onPress={() => signOut()}>Sign Out</Button>

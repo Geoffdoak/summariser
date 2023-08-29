@@ -8,10 +8,25 @@ import { useState } from "react"
 
 export default function Page({ params }: { params: { slug: string } }) {
   const [hasSubmitted, setHasSubmitted] = useState(false)
+  const [error, setError] = useState(false as boolean | string)
 
+  const handleError = function(error: string) {
+    setError(error)
+    console.log(error)
+  }
+  
   const handleClick = async function(content: string) {
-      await createQuestion(params.slug, content)
-      setHasSubmitted(true)
+      try {
+        const create = await createQuestion(params.slug, content)
+
+        if (create.error) {
+          handleError(JSON.stringify(error))
+        }
+
+        setHasSubmitted(true)
+      } catch (error) {
+        handleError(JSON.stringify(error))
+      }
   }
 
   return (
@@ -27,7 +42,7 @@ export default function Page({ params }: { params: { slug: string } }) {
           <CardBody>
             <div className="flex justify-between items-center text-large">
               <div>
-                Success!
+                {error ? 'Error adding question. Try again': 'Success!'}
               </div>
             <Button onPress={() => setHasSubmitted(false)}>Add another question</Button>
             </div>
