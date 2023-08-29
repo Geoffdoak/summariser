@@ -17,7 +17,7 @@ export async function getQuestionnaires() {
     'user server'
 
     try {
-        const session = await getServerSession(authOptions) as SessionWithId    
+        const session = await getServerSession(authOptions) as SessionWithId
         if (!session || !session.user) throw Error('Not logged in')
 
         const questionnaires = await prisma.questionnaire.findMany({
@@ -41,9 +41,9 @@ export async function getQuestionnaires() {
 
 export async function getQuestionnaire(questionnaireId: string) {
     'use server'
-    
+
     try {
-        const session = await getServerSession(authOptions) as SessionWithId    
+        const session = await getServerSession(authOptions) as SessionWithId
         if (!session || !session.user) throw Error('Not logged in')
 
         const questionnaire = await prisma.questionnaire.findUnique({
@@ -73,8 +73,9 @@ export async function createQuestionnaire(title: string) {
     'user server'
 
     try {
-        const session = await getServerSession(authOptions) as SessionWithId    
+        const session = await getServerSession(authOptions) as SessionWithId
         if (!session || !session.user) throw Error('Not logged in')
+        if (title.length < 4) throw Error('Title must be longer than 3 characters')
 
         await prisma.questionnaire.create({
             data: {
@@ -106,7 +107,7 @@ export async function removeQuestionnaire(questionnaireId: string) {
                 questionnaireId: questionnaireId
             }
         })
-        
+
         await prisma.question.deleteMany({
             where: {
                 questionnaireId: questionnaireId
@@ -131,6 +132,8 @@ export async function createQuestion(questionnaireId: string, content: string) {
     'user server'
 
     try {
+        if (content.length < 4) throw Error('Question be longer than 3 characters')
+        
         await prisma.question.create({
             data: {
                 content: content,

@@ -70,12 +70,19 @@ export default function Content() {
         initialTests()
     }, [])
 
+    const validator = function (content: string) {
+        if (content.length < 4) return { isValid: false, message: 'Must be at least 3 characters' }
+        return { isValid: true, message: '' }
+      }
+
     return (
         <AnimationWrapper>
             <div>
+                <h1 className="text-3xl mb-5">Questionnnaires</h1>
                 <AddNew
                     callback={handleAdd}
                     placeHolder={"Add a new questionnaire"}
+                    validator={validator}
                 />
                 <AnimatePresence>
                     {error}

@@ -10,23 +10,28 @@ export default function Page({ params }: { params: { slug: string } }) {
   const [hasSubmitted, setHasSubmitted] = useState(false)
   const [error, setError] = useState(false as boolean | string)
 
-  const handleError = function(error: string) {
+  const handleError = function (error: string) {
     setError(error)
     console.log(error)
   }
-  
-  const handleClick = async function(content: string) {
-      try {
-        const create = await createQuestion(params.slug, content)
 
-        if (create.error) {
-          handleError(JSON.stringify(error))
-        }
+  const handleClick = async function (content: string) {
+    try {
+      const create = await createQuestion(params.slug, content)
 
-        setHasSubmitted(true)
-      } catch (error) {
+      if (create.error) {
         handleError(JSON.stringify(error))
       }
+
+      setHasSubmitted(true)
+    } catch (error) {
+      handleError(JSON.stringify(error))
+    }
+  }
+
+  const validator = function (content: string) {
+    if (content.length < 4) return { isValid: false, message: 'Must be at least 3 characters' }
+    return { isValid: true, message: '' }
   }
 
   return (
@@ -35,6 +40,7 @@ export default function Page({ params }: { params: { slug: string } }) {
         <AddNew
           callback={handleClick}
           placeHolder="Ask a question"
+          validator={validator}
         />
       )}
       {hasSubmitted && (
@@ -42,9 +48,9 @@ export default function Page({ params }: { params: { slug: string } }) {
           <CardBody>
             <div className="flex justify-between items-center text-large">
               <div>
-                {error ? 'Error adding question. Try again': 'Success!'}
+                {error ? 'Error adding question. Try again' : 'Success!'}
               </div>
-            <Button onPress={() => setHasSubmitted(false)}>Add another question</Button>
+              <Button onPress={() => setHasSubmitted(false)}>Add another question</Button>
             </div>
           </CardBody>
         </Card>

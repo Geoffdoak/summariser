@@ -1,8 +1,6 @@
 'use client'
 
 import { useEffect, useState } from "react"
-import { getQuestions, getQuestionnaire } from "@/actions"
-import Question from "@/components/question";
 import { Button } from "@nextui-org/button";
 import { AiOutlineReload } from "react-icons/ai";
 import { AnimationWrapper } from "@/components/animationWrapper";
@@ -22,7 +20,6 @@ export default function Page({ params }: { params: { slug: string } }) {
     const [isLoading, setisLoading] = useState(false)
 
     const updateContent = async function () {
-        console.log('update content')
         setisLoading(true)
         const updatedContent = await getSummary(slug)
         if (updatedContent.body) setContent(updatedContent.body)
@@ -35,6 +32,7 @@ export default function Page({ params }: { params: { slug: string } }) {
 
     return (
         <AnimationWrapper>
+            <h1 className="text-3xl mb-5">Summary</h1>
             <div className="mb-5 flex justify-end">
                 <Button
                     onPress={updateContent}
@@ -51,7 +49,6 @@ export default function Page({ params }: { params: { slug: string } }) {
             )}
             {!isLoading && (
                 <Accordion variant="splitted">
-                    {/* {secondContent && JSON.stringify(secondContent)} */}
                     {content && content.map((response, index) => {
                         return (
                             <AccordionItem
