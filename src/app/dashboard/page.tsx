@@ -1,7 +1,9 @@
 'use client'
 
 import { useEffect, useState } from "react"
-import { getQuestionnaires, createQuestionnaire, removeQuestionnaire } from "@/actions"
+import { removeQuestionnaire } from "@/actions/database/removeQuestionnaire"
+import {createQuestionnaire} from "@/actions/database/createQuestionnaire"
+import { getQuestionnaires } from "@/actions/database/getQuestionnaires"
 import { Questionnaire } from "@/components/questionnaire"
 import { AddNew } from "@/components/addNew";
 import { AnimatePresence } from "framer-motion";
@@ -11,12 +13,12 @@ export default function Content() {
     const [questionnaires, setTests] = useState(null as Awaited<ReturnType<typeof getQuestionnaires>> | null)
     const [error, setError] = useState(null as null | string)
 
-    const handleError = function(error: string) {
+    const handleError = function (error: string) {
         // TODO: Add toast notification
         console.log(error)
         setError(error)
     }
-    
+
     const handleAdd = async function (content: string) {
         try {
             const create = await createQuestionnaire(content)
@@ -25,7 +27,7 @@ export default function Content() {
                 handleError(JSON.stringify(create.error))
                 return
             }
-            
+
             const returnedTests = await getQuestionnaires()
 
             if (returnedTests.error) {
@@ -34,7 +36,7 @@ export default function Content() {
             }
 
             setTests(returnedTests)
-        } catch(error) {
+        } catch (error) {
             handleError(JSON.stringify(error))
         }
     }
@@ -47,7 +49,7 @@ export default function Content() {
                 handleError(JSON.stringify(remove.error))
                 return
             }
-            
+
             const returnedTests = await getQuestionnaires()
 
             if (returnedTests.error) {
@@ -56,7 +58,7 @@ export default function Content() {
             }
 
             setTests(returnedTests)
-        } catch(error) {
+        } catch (error) {
             handleError(JSON.stringify(error))
         }
     }
@@ -73,7 +75,7 @@ export default function Content() {
     const validator = function (content: string) {
         if (content.length < 4) return { isValid: false, message: 'Must be at least 3 characters' }
         return { isValid: true, message: '' }
-      }
+    }
 
     return (
         <AnimationWrapper>

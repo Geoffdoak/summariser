@@ -4,15 +4,8 @@ import { useEffect, useState } from "react"
 import { Button } from "@nextui-org/button";
 import { AiOutlineReload } from "react-icons/ai";
 import { AnimationWrapper } from "@/components/animationWrapper";
-import { getSummary, GroupedQuestionType } from "@/openai";
+import { getSummary, GroupedQuestionType } from "@/actions/openAI/openai";
 import { Accordion, AccordionItem, Spinner } from "@nextui-org/react";
-
-
-type QuestionsType = {
-    id: string;
-    questionnaireId: string;
-    content: string;
-}[] | null
 
 export default function Page({ params }: { params: { slug: string } }) {
     const { slug } = params

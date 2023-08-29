@@ -1,6 +1,7 @@
 'use server'
 
-import { getQuestionnaire, setGroupedQuestions } from "./actions"
+import { setGroupedQuestions } from "@/actions/database/setGroupedQuestions"
+import { getQuestionnaire } from "@/actions/database/getQuestionnaire"
 
 function prompt(q1: string, q2: string) {
     return (

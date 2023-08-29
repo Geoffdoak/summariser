@@ -1,6 +1,6 @@
 'use client'
 
-import { createQuestion } from "@/actions"
+import { createQuestion } from "@/actions/database/createQuestion"
 import { AddNew } from "@/components/addNew"
 import { AnimationWrapper } from "@/components/animationWrapper"
 import { Button, Card, CardBody } from "@nextui-org/react"
