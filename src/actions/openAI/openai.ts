@@ -38,7 +38,15 @@ async function compareQuestions(q1: string, q2: string): Promise<ComparisonType>
 
     const comparison = await getGptResponse(query)
 
-    if (!comparison?.choices[0]?.message?.content) return 'ERROR'
+    console.log(comparison)
+    if (
+        !comparison
+        || !comparison.choices
+        || !Array.isArray(comparison.choices)
+        || !comparison.choices[0]
+        || !comparison.choices[0].message
+        || !comparison.choices[0].message.content
+    ) return 'ERROR'
 
     const response: string = comparison.choices[0].message.content
 
