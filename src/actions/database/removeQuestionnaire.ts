@@ -19,24 +19,24 @@ export async function removeQuestionnaire(questionnaireId: string) {
         const session = await getServerSession(authOptions) as SessionWithId
         if (!session || !session.user) throw Error('Not logged in')
 
-        await prisma.groupedQuestion.deleteMany({
-            where: {
-                questionnaireId: questionnaireId
-            }
-        })
-
-        await prisma.question.deleteMany({
-            where: {
-                questionnaireId: questionnaireId
-            }
-        })
-
-        await prisma.questionnaire.delete({
-            where: {
-                id: questionnaireId,
-                userId: session.id
-            }
-        })
+        await prisma.$transaction([
+            prisma.groupedQuestion.deleteMany({
+                where: {
+                    questionnaireId: questionnaireId
+                }
+            }),
+            prisma.question.deleteMany({
+                where: {
+                    questionnaireId: questionnaireId
+                }
+            }),
+            prisma.questionnaire.delete({
+                where: {
+                    id: questionnaireId,
+                    userId: session.id
+                }
+            })
+        ])
 
         return { error: false }
     } catch (error) {

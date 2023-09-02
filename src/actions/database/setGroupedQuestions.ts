@@ -22,36 +22,38 @@ export async function setGroupedQuestions(
         const session = await getServerSession(authOptions) as SessionWithId
         if (!session || !session.user) throw Error('Not logged in')
 
-        await prisma.groupedQuestion.deleteMany({
-            where: {
-                questionnaireId: questionnnaireId
+        const groupedQuestionsQuery = groupedQuestions.map(groupedQuestion => {
+            return {
+                questionnaireId: questionnnaireId,
+                content: groupedQuestion.questionContent,
+                exampleQuestions: {
+                    connect: groupedQuestion.askedQuestions.map(askedQuestion => {
+                        return {
+                            id: askedQuestion.id
+                        }
+                    })
+                }
             }
         })
 
-        for (const groupedQuestion of groupedQuestions) {
-            await prisma.groupedQuestion.create({
+        await prisma.$transaction([
+            prisma.groupedQuestion.deleteMany({
+                where: {
+                    questionnaireId: questionnnaireId
+                }
+            }),
+            prisma.groupedQuestion.createMany({
+                data: groupedQuestionsQuery
+            }),
+            prisma.questionnaire.update({
+                where: {
+                    id: questionnnaireId
+                },
                 data: {
-                    questionnaireId: questionnnaireId,
-                    content: groupedQuestion.questionContent,
-                    exampleQuestions: {
-                        connect: groupedQuestion.askedQuestions.map(askedQuestion => {
-                            return {
-                                id: askedQuestion.id
-                            }
-                        })
-                    }
+                    summarised: true
                 }
             })
-        }
-
-        await prisma.questionnaire.update({
-            where: {
-                id: questionnnaireId
-            },
-            data: {
-                summarised: true
-            }
-        })
+        ])
 
         return { error: false }
     } catch (error) {
