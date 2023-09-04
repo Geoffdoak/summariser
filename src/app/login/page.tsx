@@ -27,7 +27,7 @@ export default function SignIn() {
 
   const onSubmit = async function () {
     const url = window.origin + '/dashboard'
-    signIn('credentials', { email: email, password: password, callbackUrl: url })
+    signIn('credentials', { email: email.content, password: password.content, callbackUrl: url })
   }
 
   return (
