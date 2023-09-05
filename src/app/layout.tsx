@@ -6,8 +6,7 @@ import Menu from '@/components/menu';
 import { getServerSession } from 'next-auth';
 const inter = Inter({ subsets: ['latin'] })
 import { authOptions } from "./api/auth/[...nextauth]/route"
-import { AnimationWrapper } from '@/components/animationWrapper';
-
+import ErrorNotfication from '@/components/error';
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -27,11 +26,11 @@ export default async function RootLayout({
         <body className={inter.className}>
           <Providers>
             <Menu isSignedIn={isSignedIn}></Menu>
-              <AnimationWrapper>
                 <div className="container mx-auto column-12 px-5 pt-5 max-w-5xl">
+                <ErrorNotfication>
                   {children}
+                </ErrorNotfication>
                 </div>
-              </AnimationWrapper>
           </Providers>
         </body>
       </html>
