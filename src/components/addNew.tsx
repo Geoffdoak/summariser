@@ -1,37 +1,22 @@
 'use client'
 
 import { Button, Card, CardBody, Input } from "@nextui-org/react"
-import { useEffect, useState } from "react"
 import { AiOutlinePlus } from "react-icons/ai"
+import useValidInput, { ValidatorType } from '@/hooks/forms/useValidInput'
 
 type AddNewProps = {
     callback: (content: string) => void,
-    placeHolder: string
-    validator: (content: string) => { isValid: boolean, message: string }
+    placeHolder: string,
+    validator: ValidatorType,
+    isSubmitting: boolean
 }
 
 export function AddNew(props: AddNewProps) {
-    const { callback, placeHolder, validator } = props
-    const [content, setContent] = useState('')
-    const [isValid, setIsValid] = useState(true)
-    const [validationMessage, setValidationMessage] = useState('')
-    const [untouched, setUntouched] = useState(true)
+    const { callback, placeHolder, validator, isSubmitting } = props
+    const input = useValidInput('', validator)
 
-    useEffect(() => {
-        if (!untouched) {
-            const validation = validator(content)
-            setIsValid(validation.isValid)
-            setValidationMessage(validation.message)
-        }
-    }, [content])
-
-    const handleContent = function(content: string) {
-        setUntouched(false)
-        setContent(content)
-    }
-
-    const handleAction = function(content: string) {
-        if (isValid) callback(content)
+    const handleAction = function() {
+        if (input.isValid) callback(input.content)
     }
 
     return (
@@ -39,22 +24,24 @@ export function AddNew(props: AddNewProps) {
             <CardBody>
                 <form
                     className="inline-flex"
-                    action={() => handleAction(content)}
+                    action={handleAction}
                 >
                     <Input
                         className="mr-5"
                         type="text"
                         required
-                        value={content}
-                        onChange={(e) => handleContent(e.target.value)}
+                        value={input.content}
+                        onChange={(e) => input.set(e.target.value)}
                         id='title'
                         placeholder={placeHolder}
-                        validationState={isValid ? 'valid' : 'invalid'}
-                        errorMessage={validationMessage}
+                        validationState={input.showError ? 'invalid' : 'valid'}
+                        errorMessage={input.message}
                     />
                     <Button
                         type="submit"
                         isIconOnly
+                        isLoading={isSubmitting}
+                        isDisabled={!input.isValid || isSubmitting}
                     >
                         <AiOutlinePlus />
                     </Button>
