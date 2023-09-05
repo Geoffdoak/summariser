@@ -22,38 +22,36 @@ export async function setGroupedQuestions(
         const session = await getServerSession(authOptions) as SessionWithId
         if (!session || !session.user) throw Error('Not logged in')
 
-        const groupedQuestionsQuery = groupedQuestions.map(groupedQuestion => {
-            return {
-                questionnaireId: questionnnaireId,
-                content: groupedQuestion.questionContent,
-                exampleQuestions: {
-                    connect: groupedQuestion.askedQuestions.map(askedQuestion => {
-                        return {
-                            id: askedQuestion.id
-                        }
-                    })
-                }
+        await prisma.groupedQuestion.deleteMany({
+            where: {
+                questionnaireId: questionnnaireId
             }
         })
 
-        await prisma.$transaction([
-            prisma.groupedQuestion.deleteMany({
-                where: {
-                    questionnaireId: questionnnaireId
-                }
-            }),
-            prisma.groupedQuestion.createMany({
-                data: groupedQuestionsQuery
-            }),
-            prisma.questionnaire.update({
-                where: {
-                    id: questionnnaireId
-                },
+        for (const groupedQuestion of groupedQuestions) {
+            await prisma.groupedQuestion.create({
                 data: {
-                    summarised: true
+                    questionnaireId: questionnnaireId,
+                    content: groupedQuestion.questionContent,
+                    exampleQuestions: {
+                        connect: groupedQuestion.askedQuestions.map(askedQuestion => {
+                            return {
+                                id: askedQuestion.id
+                            }
+                        })
+                    }
                 }
             })
-        ])
+        }
+
+        await prisma.questionnaire.update({
+            where: {
+                id: questionnnaireId
+            },
+            data: {
+                summarised: true
+            }
+        })
 
         return { error: false }
     } catch (error) {
