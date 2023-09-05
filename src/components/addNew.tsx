@@ -24,7 +24,7 @@ export function AddNew(props: AddNewProps) {
             <CardBody>
                 <form
                     className="inline-flex"
-                    action={handleAction}
+                    // action={handleAction}
                 >
                     <Input
                         className="mr-5"
@@ -42,6 +42,7 @@ export function AddNew(props: AddNewProps) {
                         isIconOnly
                         isLoading={isSubmitting}
                         isDisabled={!input.isValid || isSubmitting}
+                        onPress={handleAction}
                     >
                         <AiOutlinePlus />
                     </Button>
