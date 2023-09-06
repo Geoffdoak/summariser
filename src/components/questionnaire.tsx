@@ -1,7 +1,7 @@
 'use client'
 
 import { Button, Card, CardBody, CardHeader } from "@nextui-org/react"
-import { LayoutGroup, motion } from "framer-motion"
+import { motion } from "framer-motion"
 import NextLink from "next/link"
 import DeleteButton from "./deleteButton"
 import { AiOutlinePlus } from "react-icons/ai"
@@ -9,16 +9,11 @@ import { AiOutlinePlus } from "react-icons/ai"
 type QuestionnaireProps = {
     title: string,
     id: string,
-    questions: {
-        id: string;
-        questionnaireId: string;
-        content: string;
-    }[],
     removeHandler: (questionnaireId: string) => void
 }
 
 export function Questionnaire(props: QuestionnaireProps) {
-    const { title, id, questions, removeHandler } = props
+    const { title, id, removeHandler } = props
 
     return (
         <motion.div layout>
@@ -37,12 +32,14 @@ export function Questionnaire(props: QuestionnaireProps) {
                                 as={NextLink}
                                 isIconOnly
                                 color="success"
+                                size='sm'
                             >
                                 <AiOutlinePlus />
                             </Button>
                             <Button
                                 href={'/summary/' + id}
                                 as={NextLink}
+                                size='sm'
                             >
                                 Summary
                             </Button>

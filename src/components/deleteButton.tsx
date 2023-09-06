@@ -16,6 +16,7 @@ export default function DeleteButton(props: DeleteButtonProps) {
             onPress={deleteHandler}
             isIconOnly
             color="danger"
+            size='sm'
         >
             <AiOutlineDelete />
         </Button>
