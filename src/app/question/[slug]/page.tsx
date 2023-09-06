@@ -4,25 +4,29 @@ import { createQuestion } from "@/actions/database/createQuestion"
 import { AddNew } from "@/components/addNew"
 import { AnimationWrapper } from "@/components/animationWrapper"
 import { Button, Card, CardBody } from "@nextui-org/react"
-import { useState } from "react"
+import { useContext, useState } from "react"
+import { ErrorNotificationContext } from "@/components/error"
 
 export default function Page({ params }: { params: { slug: string } }) {
   const [hasSubmitted, setHasSubmitted] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [error, setError] = useState(false as boolean | string)
+  const [isError, setIsError] = useState(false)
+  const updateError = useContext(ErrorNotificationContext)
 
   const handleError = function (error: string) {
-    setError(error)
     console.log(error)
+    updateError(error)
   }
 
   const handleClick = async function (content: string) {
     try {
       setIsSubmitting(true)
+      setIsError(false)
       const create = await createQuestion(params.slug, content)
 
       if (create.error) {
-        handleError(JSON.stringify(error))
+        handleError(JSON.stringify(create.error))
+        setIsError(true)
       }
 
       setIsSubmitting(false)
@@ -52,7 +56,7 @@ export default function Page({ params }: { params: { slug: string } }) {
           <CardBody>
             <div className="flex justify-between items-center text-large">
               <div>
-                {error ? 'Error adding question. Try again' : 'Success!'}
+                {isError ? 'Error adding question. Try again' : 'Success!'}
               </div>
               <Button onPress={() => setHasSubmitted(false)}>Add another question</Button>
             </div>
