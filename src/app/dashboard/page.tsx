@@ -1,41 +1,45 @@
 'use client'
 
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { removeQuestionnaire } from "@/actions/database/removeQuestionnaire"
-import {createQuestionnaire} from "@/actions/database/createQuestionnaire"
+import { createQuestionnaire } from "@/actions/database/createQuestionnaire"
 import { getQuestionnaires } from "@/actions/database/getQuestionnaires"
 import { Questionnaire } from "@/components/questionnaire"
 import { AddNew } from "@/components/addNew";
 import { AnimatePresence } from "framer-motion";
 import { AnimationWrapper } from "@/components/animationWrapper";
+import { Spinner } from "@nextui-org/spinner"
+import { ErrorNotificationContext } from "@/components/error"
+
+type QuestionnaireType = {
+    title: string,
+    id: string
+}
 
 export default function Content() {
-    const [questionnaires, setTests] = useState(null as Awaited<ReturnType<typeof getQuestionnaires>> | null)
-    const [error, setError] = useState(null as null | string)
+    const [questionnaires, setQuestionnaires] = useState([] as QuestionnaireType[])
+    const [isLoading, setisLoading] = useState(true)
+    const [isSubmitting, setIsSubmitting] = useState(false)
+    const updateError = useContext(ErrorNotificationContext)
 
     const handleError = function (error: string) {
-        // TODO: Add toast notification
         console.log(error)
-        setError(error)
+        updateError(error)
     }
 
     const handleAdd = async function (content: string) {
         try {
+            setIsSubmitting(true)
             const create = await createQuestionnaire(content)
 
             if (create.error) {
                 handleError(JSON.stringify(create.error))
+                setIsSubmitting(false)
                 return
             }
 
-            const returnedTests = await getQuestionnaires()
-
-            if (returnedTests.error) {
-                handleError(returnedTests.error)
-                return
-            }
-
-            setTests(returnedTests)
+            await updateQuestionnaires()
+            setIsSubmitting(false)
         } catch (error) {
             handleError(JSON.stringify(error))
         }
@@ -50,57 +54,63 @@ export default function Content() {
                 return
             }
 
-            const returnedTests = await getQuestionnaires()
-
-            if (returnedTests.error) {
-                handleError(returnedTests.error)
-                return
-            }
-
-            setTests(returnedTests)
+            await updateQuestionnaires()
         } catch (error) {
             handleError(JSON.stringify(error))
         }
     }
 
-    const initialTests = async function () {
+    const updateQuestionnaires = async function () {
         const returnedTests = await getQuestionnaires()
-        if (returnedTests) setTests(returnedTests)
+        if (returnedTests && returnedTests.body) {
+            const questionnaires = returnedTests.body.map(questionnaire => {
+                return {
+                    title: questionnaire.title,
+                    id: questionnaire.id
+                }
+            })
+            setQuestionnaires(questionnaires)
+        }
+        setisLoading(false)
     }
 
     useEffect(() => {
-        initialTests()
+        updateQuestionnaires()
     }, [])
 
     const validator = function (content: string) {
-        if (content.length < 4) return { isValid: false, message: 'Must be at least 3 characters' }
-        return { isValid: true, message: '' }
+        return {
+            isValid: content.length > 2,
+            message: 'Must be at least 3 characters'
+        }
     }
 
     return (
         <AnimationWrapper>
-            <div>
                 <h1 className="text-3xl mb-5">Questionnnaires</h1>
                 <AddNew
                     callback={handleAdd}
                     placeHolder={"Add a new questionnaire"}
                     validator={validator}
+                    isSubmitting={isSubmitting}
                 />
                 <AnimatePresence>
-                    {error}
-                    {questionnaires?.body && questionnaires.body.map(test => {
+                    {isLoading && (
+                        <div className="flex justify-center" >
+                            <Spinner />
+                        </div>
+                    )}
+                    {questionnaires.map(questionnaire => {
                         return (
                             <Questionnaire
-                                key={test.id}
-                                title={test.title}
-                                id={test.id}
-                                questions={test.questions}
+                                key={questionnaire.id}
+                                title={questionnaire.title}
+                                id={questionnaire.id}
                                 removeHandler={handleRemove}
                             />
                         )
                     })}
                 </AnimatePresence>
-            </div>
         </AnimationWrapper>
     )
 }
