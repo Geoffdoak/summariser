@@ -4,14 +4,21 @@ import { createQuestion } from "@/actions/database/createQuestion"
 import { AddNew } from "@/components/addNew"
 import { AnimationWrapper } from "@/components/animationWrapper"
 import { Button, Card, CardBody } from "@nextui-org/react"
-import { useContext, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { ErrorNotificationContext } from "@/components/error"
+import { getQuestionnaire } from "@/actions/database/getQuestionnaire"
 
 export default function Page({ params }: { params: { slug: string } }) {
+  const [title, setTitle] = useState('')
   const [hasSubmitted, setHasSubmitted] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isError, setIsError] = useState(false)
   const updateError = useContext(ErrorNotificationContext)
+
+  const updateTitle = async function () {
+    const questionnnaire = await getQuestionnaire(params.slug)
+    if (questionnnaire.body) setTitle(questionnnaire.body.title)
+  }
 
   const handleError = function (error: string) {
     console.log(error)
@@ -36,6 +43,10 @@ export default function Page({ params }: { params: { slug: string } }) {
     }
   }
 
+  useEffect(() => {
+    updateTitle()
+  }, [])
+
   const validator = function (content: string) {
     if (content.length < 4) return { isValid: false, message: 'Must be at least 3 characters' }
     return { isValid: true, message: '' }
@@ -43,6 +54,7 @@ export default function Page({ params }: { params: { slug: string } }) {
 
   return (
     <AnimationWrapper>
+      <h1 className="text-3xl mb-5">{'Questionnaire for: ' + title}</h1>
       {!hasSubmitted && (
         <AddNew
           callback={handleClick}
