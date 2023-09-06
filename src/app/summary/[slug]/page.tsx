@@ -34,7 +34,7 @@ export default function Page({ params }: { params: { slug: string } }) {
     return (
         <AnimationWrapper>
             <h1 className="text-3xl mb-5">{'Summary of: ' + title}</h1>
-            <div className="mb-5 flex justify-end">
+            <div className="mb-5 flex justify-start">
                 <Button
                     onPress={updateContent}
                     color={'success'}
