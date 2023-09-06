@@ -22,9 +22,8 @@ export function AddNew(props: AddNewProps) {
     return (
         <Card className="mb-5">
             <CardBody>
-                <form
+                <div
                     className="inline-flex"
-                    // action={handleAction}
                 >
                     <Input
                         className="mr-5"
@@ -46,7 +45,7 @@ export function AddNew(props: AddNewProps) {
                     >
                         <AiOutlinePlus />
                     </Button>
-                </form>
+                </div>
             </CardBody>
         </Card>
     )
