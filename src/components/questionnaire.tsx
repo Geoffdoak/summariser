@@ -5,6 +5,7 @@ import { motion } from "framer-motion"
 import NextLink from "next/link"
 import DeleteButton from "./deleteButton"
 import { AiOutlinePlus } from "react-icons/ai"
+import ShareButton from "./shareButton"
 
 type QuestionnaireProps = {
     title: string,
@@ -36,6 +37,10 @@ export function Questionnaire(props: QuestionnaireProps) {
                             >
                                 <AiOutlinePlus />
                             </Button>
+                            <ShareButton
+                            className="mr-3"
+                                qid={id}
+                             />
                             <Button
                                 href={'/summary/' + id}
                                 as={NextLink}
