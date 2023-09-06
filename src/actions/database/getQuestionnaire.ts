@@ -24,6 +24,7 @@ export async function getQuestionnaire(questionnaireId: string) {
                 id: questionnaireId
             },
             select: {
+                title: true,
                 questions: true,
                 groupedQuestions: {
                     select: {
@@ -32,7 +33,7 @@ export async function getQuestionnaire(questionnaireId: string) {
                     }
                 },
                 summarised: true
-            }
+            },
         })
 
         return { body: questionnaire }
