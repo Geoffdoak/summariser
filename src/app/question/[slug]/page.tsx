@@ -8,6 +8,7 @@ import { useState } from "react"
 
 export default function Page({ params }: { params: { slug: string } }) {
   const [hasSubmitted, setHasSubmitted] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState(false as boolean | string)
 
   const handleError = function (error: string) {
@@ -17,12 +18,14 @@ export default function Page({ params }: { params: { slug: string } }) {
 
   const handleClick = async function (content: string) {
     try {
+      setIsSubmitting(true)
       const create = await createQuestion(params.slug, content)
 
       if (create.error) {
         handleError(JSON.stringify(error))
       }
 
+      setIsSubmitting(false)
       setHasSubmitted(true)
     } catch (error) {
       handleError(JSON.stringify(error))
@@ -41,6 +44,7 @@ export default function Page({ params }: { params: { slug: string } }) {
           callback={handleClick}
           placeHolder="Ask a question"
           validator={validator}
+          isSubmitting={isSubmitting}
         />
       )}
       {hasSubmitted && (
