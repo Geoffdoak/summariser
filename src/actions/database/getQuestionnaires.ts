@@ -28,6 +28,9 @@ export async function getQuestionnaires() {
                 id: true,
                 questions: true,
                 summarised: true,
+            },
+            orderBy: {
+                updatedAt: 'desc'
             }
         })
 
